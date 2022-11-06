@@ -1,4 +1,5 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import java.io.File;
 
 /**
  * Write a description of class Hero here.
@@ -14,31 +15,47 @@ public class Hero extends Actor
      */
     public void act()
     {
-        edge();
         moveHero();
-        
-    }
-    
-    public void edge()
-    {
-        if (isAtEdge())
-            setLocation(0,getY());
-        
-    }
+        shootLaser();
+        getTouch();
+    }  
     
     public void moveHero()
     {
-        
-        if(Greenfoot.isKeyDown("d"))
-            setLocation(getX()+10,getY());
-        
-        if(Greenfoot.isKeyDown("a"))
-            setLocation(getX()-10,getY());
+        if (Greenfoot.isKeyDown("W"))
+            setLocation(getX(),getY()-3);
+        if (Greenfoot.isKeyDown("S"))
+            setLocation(getX(),getY()+3);
             
-        if(Greenfoot.isKeyDown("w"))
-            setLocation(getX(),getY()-10);
-        
-        if(Greenfoot.isKeyDown("s"))
-            setLocation(getX(),getY()+10);
+        if (Greenfoot.isKeyDown("A"))
+            setLocation(getX()-3,getY());
+        if (Greenfoot.isKeyDown("D"))
+            setLocation(getX()+3,getY());
+    }
+    
+    int laserTimer = 0;
+    public void shootLaser()
+    {
+       /* if (Greenfoot.isKeyDown("space"))
+        {
+            getWorld().addObject(new Fire(), getX()+50,getY());
+            Greenfoot.playSound("rocket_launch.mp3");
+        }*/
+        if(laserTimer==20){
+            Greenfoot.playSound("rocket_launch.mp3");
+            getWorld().addObject(new Fire(), getX()+50, getY());
+            laserTimer = 0;
+        }else{
+            laserTimer++;
+        }
+    }
+    
+    public void getTouch()
+    {
+        if(isTouching(Enemy.class)||isTouching(FireEnemy.class)){
+            Greenfoot.playSound("Explosion.wav");
+            getWorld().addObject(new Boom(),getX(),getY());
+            setLocation(100,200);
+        }
     }
 }
